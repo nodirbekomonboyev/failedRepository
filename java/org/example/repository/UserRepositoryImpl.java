@@ -2,6 +2,7 @@ package org.example.repository;
 
 import org.example.config.BeanConfig;
 import org.example.entity.UserEntity;
+import org.modelmapper.ModelMapper;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,6 +16,8 @@ import java.util.UUID;
 public class UserRepositoryImpl implements UserRepository{
 
     private final Connection connection = BeanConfig.connection();
+
+    private final ModelMapper modelMapper;
     private static UserRepository instance;
 
     public static UserRepository getInstance() {
@@ -44,7 +47,18 @@ public class UserRepositoryImpl implements UserRepository{
 
     @Override
     public Optional<UserEntity> getById(UUID id) {
-        return Optional.empty();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(GET_BY_ID);
+            preparedStatement.setString(1, id.toString());
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return Optional.of(UserEntity.map(resultSet));
+            }
+            return Optional.empty();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
