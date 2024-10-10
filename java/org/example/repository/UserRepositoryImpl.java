@@ -2,8 +2,6 @@ package org.example.repository;
 
 import org.example.config.BeanConfig;
 import org.example.entity.UserEntity;
-import org.modelmapper.ModelMapper;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,7 +15,6 @@ public class UserRepositoryImpl implements UserRepository{
 
     private final Connection connection = BeanConfig.connection();
 
-    private final ModelMapper modelMapper;
     private static UserRepository instance;
 
     public static UserRepository getInstance() {
