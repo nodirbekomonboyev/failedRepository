@@ -1,24 +1,29 @@
 package org.example;
 
-import org.example.service.UserService;
+import org.example.repository.RootsRepositoryImpl;
+import org.example.repository.UserRepositoryImpl;
+
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 
 public class Main {
 
     private static final Scanner scanner = new Scanner(System.in);
 
-    private static UserService userService;
+    private static UserRepositoryImpl userRepository;
+    private static RootsRepositoryImpl rootsRepository;
 
     public static void main(String[] args) {
         menuOne();
         String username = scanner.nextLine();
         menuTwo();
         String password = scanner.nextLine();
-        if(userService.checkPassword(username, password)){
-            menuFive(username);
+        String id = userRepository.checkPassword(username, password);
+        if(id != null){
+            menuFive(UUID.fromString(id));
         }
     }
     public static void menuOne(){
@@ -26,13 +31,13 @@ public class Main {
                     
                     Akkountga kirish
                     
-                    Username ni kiriting : """);
+                    Username ni kiriting :  """);
     }
 
     public static void menuTwo(){
         System.out.println("""
                      
-                     Password ni kiriting : """);
+                     Password ni kiriting :  """);
     }
 
     public static void menuThree(){
@@ -49,14 +54,14 @@ public class Main {
 
     }
 
-    public static void menuFive(String username){
+    public static void menuFive(UUID userId){
         System.out.println("""
                     
                     Sizning lug'atlaringiz
                     
                     """);
 
-        List<String> distinctDates = userService.getDistinctDates(username);
+        List<String> distinctDates = rootsRepository.getDistinctDates(userId);
         for (int i = 0; i < distinctDates.size(); i++) {
             System.out.println((i + 1) + ". " + distinctDates.get(i));
         }

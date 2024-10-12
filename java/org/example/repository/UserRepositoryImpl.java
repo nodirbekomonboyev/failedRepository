@@ -58,6 +58,21 @@ public class UserRepositoryImpl implements UserRepository{
         }
     }
 
+    public String checkPassword(String username, String password){
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(CHECK_PASSWORD);
+            preparedStatement.setString(1, username);
+            preparedStatement.setString(2, password);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString(1);
+            }
+            return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
     public List<UserEntity> getAll() {
         return null;
